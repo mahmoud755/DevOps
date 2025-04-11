@@ -3,4 +3,4 @@ kind: StorageClass
 metadata:
   name: mysql-sc
 provisioner: ebs.csi.aws.com
-volumeBindingMode: WaitForFirstConsumer
+volumeBindingMode: WaitForFirstConsumer      # storage class will not create a volume till deployment running properly
