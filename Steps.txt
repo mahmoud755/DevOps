@@ -2,3 +2,4 @@
 2. Create StorageClass file for mysql
 3. Create PVC file for mysql
 4. Create Deployment for mysql
+5. Create Service for mysql (ClusterIP)
