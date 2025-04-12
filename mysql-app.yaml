@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-app
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: mysql
+  template:
+    metadata:
+      labels:    # it must match the selectors
+        app: wordpress
+        tier: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:5.6
+          env:
+            - name: MYSQL_ROOT_PASSWORD   # Refer to Secret file
+              valueFrom:
+                secretKeyRef:
+                  key: password   # defined in secret file mysql
+                  secret: mysql-pass  # defined also in secret file mysql
+          ports:
+            - containerPorts: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-storage
+     volumes:
+       - name: mysql-storage
+         presistentVolumeClaim:
+           claimName: mysql-pvc
