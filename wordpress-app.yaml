@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-app
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: frontend
+  template:
+    metadata:
+      labels:    # it must match the selectors
+        app: wordpress
+        tier: frontend
+    spec:
+      containers:
+        - name: wordpress
+          image: wordpress:php7.1-apache
+          env:
+            - name: WORDPRESS_DB_HOST   # Refer to mysql service file
+              value: mysql-svc
+            - name: WORDPRESS_DB_PASSWORD   # Refer to mysql secret file
+              valueFrom:
+                secretKeyRef:
+                  key: password   # defined in secret file mysql
+                  name: mysql-pass  # defined also in secret file mysql
+          ports:
+            - containerPorts: 80
+          volumeMounts:
+            - mountPath: /var/html/www
+              name: wordpress-storage
+     volumes:
+       - name: wordpress-storage
+         presistentVolumeClaim:
+           claimName: wordpress-efs-pvc
